@@ -1,7 +1,7 @@
-package com.test.model
+package com.example.model
 
 import akka.actor.ActorRef
-import com.test.model.Models.{CarRequest, Point}
+import com.example.model.Models.{CarRequest, Point}
 
 object Protocol {
 

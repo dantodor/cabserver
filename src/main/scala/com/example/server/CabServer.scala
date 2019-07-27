@@ -1,10 +1,10 @@
-package com.test.server
+package com.example.server
 
 import akka.http.scaladsl.Http
-import com.test.routes.ServerRoutes
-import com.test.config.ServerSettings._
+import com.example.routes.ServerRoutes
+import com.example.config.ServerSettings._
 
-object HttpServer extends App {
+object CabServer extends App {
 
   Http(actorSystem).bindAndHandle(ServerRoutes.availableRoutes, httpInterface, httpPort)
   log.info(s"\nAkka HTTP Server - Version ${actorSystem.settings.ConfigVersion} - running at http://$httpInterface:$httpPort/")

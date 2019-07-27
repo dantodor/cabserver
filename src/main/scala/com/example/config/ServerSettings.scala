@@ -1,9 +1,9 @@
-package com.test.config
+package com.example.config
 
 import akka.actor.ActorSystem
-import akka.event.{ LogSource, Logging }
+import akka.event.{LogSource, Logging}
 import akka.stream.ActorMaterializer
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.ExecutionContextExecutor
 
@@ -14,7 +14,7 @@ trait ServerSettings {
   val httpInterface: String = httpConfig.getString("interface")
   val httpPort: Int = httpConfig.getInt("port")
 
-  implicit val actorSystem: ActorSystem = ActorSystem("myserver")
+  implicit val actorSystem: ActorSystem = ActorSystem("cabserver")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = actorSystem.dispatcher
   private implicit val logSource: LogSource[ServerSettings] = (t: ServerSettings) ⇒ t.getClass.getSimpleName

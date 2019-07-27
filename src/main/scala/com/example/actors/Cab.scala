@@ -1,9 +1,9 @@
-package com.test.actors
+package com.example.actors
 
 import akka.actor.Actor
 import akka.event.Logging
-import com.test.model.Models.{CarRequest, Point}
-import com.test.model.Protocol.{Book, Booked, Checkpoint, Distance, Free, Timestep}
+import com.example.model.Models.{CarRequest, Point}
+import com.example.model.Protocol.{Book, Booked, Checkpoint, Distance, Free, Timestep}
 
 
 class Cab(initialPosition:Point) extends Actor {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.test.routes
+package com.example.routes
 
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import com.test.config.ServerSettings
+import com.example.config.ServerSettings
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.test.routes
+package com.example.routes
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.example.model.Models.CarRequest
 import de.heikoseeberger.akkahttpcirce.CirceSupport._
 import io.circe.generic.auto._
 
@@ -26,20 +27,22 @@ import scala.concurrent.Future
 object ServerRoutes extends BaseRoute with ResponseWrapper {
 
 
+  import com.example.config.ServerSettings._
+
   protected def templateDirectives: Route =
     pathPrefix("service1") {
       get {
         path("status") {
           extractRequest { req ⇒
-            sendResponse(Future(ApiMessage(ApiStatusMessages.currentStatus())))
+            sendResponse(Future("blah"))
           }
         }
       } ~
         post {
           path("model") {
             decodeRequest {
-              entity(as[Request]) { request =>
-                sendResponse(Future(ApiMessage(s"model.vString: ${request.from} - model.vListInt: ${request.to}")))
+              entity(as[CarRequest]) { request =>
+                sendResponse(Future(s"model.vString: ${request.from} - model.vListInt: ${request.to}"))
               }
             }
           }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.test.model
+package com.example.model
 
 object Models {
   case class Point(x:Long, y:Long)

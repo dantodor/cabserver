@@ -1,11 +1,11 @@
-package com.test.actors
+package com.example.actors
 
 import akka.actor.{Actor, Props}
 import akka.event.Logging
 import akka.pattern.ask
-import com.test.model.Models.{CarRequest, Point}
-import com.test.model.Protocol.{Book, Checkpoint, Distance, Free, Reset, Timestep}
-
+import com.example.model.Models.{CarRequest, Point}
+import com.example.model.Protocol.{Book, Checkpoint, Distance, Free, Reset, Timestep}
+import scala.language.postfixOps
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
