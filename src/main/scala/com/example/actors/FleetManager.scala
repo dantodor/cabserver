@@ -3,8 +3,10 @@ package com.example.actors
 import akka.actor.{Actor, Props}
 import akka.event.Logging
 import akka.pattern.ask
-import com.example.model.Models.{CarRequest, Point}
+import com.example.model.Models.{BookResponse, CarRequest, GenericAPIResponse, Point}
 import com.example.model.Protocol.{Book, Checkpoint, Distance, Free, Reset, Timestep}
+import akka.pattern.pipe
+
 import scala.language.postfixOps
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -16,17 +18,19 @@ class FleetManager(howManyCars:Int) extends Actor {
   implicit val ec = context.dispatcher
   val log = Logging(context.system, this.getClass)
 
-  val fleet = (0 to howManyCars) map { i => context.actorOf(Props(new Cab(Point(1,1))), name = s"Cab ${i}")}
+  val fleet = (1 to howManyCars) map { i => context.actorOf(Props(new Cab(Point(1,1))), name = s"${i}")}
 
   def receive = {
     case crq:CarRequest => {
-      val who = sender // since we will be working with futures, we need a reference to the requester
+      log.debug(s"Received car request: ${crq}")
+      // since we will be working with futures, we need a reference to the requester
+      val who = sender
       // we ask each car to tell the distance from this request
-      val s = Future.sequence(fleet map { car => (car ? Checkpoint(crq.from)).mapTo[Any]}) map (_.collect{case Success(x)=>x})
+      val responses = Future.sequence(fleet map { car => (car ? Checkpoint(crq.from)).mapTo[Any]})
 
-      s onComplete {
+      responses onComplete {
         case Success(s) => {
-          // all succesfull futures are collected
+          // all succesfully completed futures are collected
           // possible answers are the distance from the requester or car booked
           //so we filter only the cars that answered with a distance
           val v = s collect {
@@ -34,23 +38,31 @@ class FleetManager(howManyCars:Int) extends Actor {
           }
           // check if we have any car
           if(v.length>0) {
-            val car = v.minBy(dist=> dist.i).car
-            car ! Book(crq)
-            who ! s"success, we booked you ${car.path.name}"
+            val minDist = v.minBy(dist=>dist.dist).dist //find the minimal distance
+            val cab = v.filter(_.dist==minDist).sortBy(_.car.path.name.toInt).head.car //filter and sort
+            (cab ? Book(crq)) pipeTo who
           } else {
-            who ! "All cabs are booked, please retry"
+            who ! BookResponse(0,0)
           }
         }
 
         case Failure(exception) => { // somehow our Future has failed, inform requester and log error
           log.error(exception.getMessage)
-          who ! s"Error while trying to book: ${exception.getMessage}"
+          who ! BookResponse(0,0)
         }
       }
     }
 
-    case Reset => fleet map (car => car ! Free(Point(1,1)) )
-    case Timestep => fleet map (car => car ! Timestep )
+    case Reset => {
+      log.debug("Reseting fleet")
+      fleet map (car => car ! Free(Point(1,1)) )
+      sender ! GenericAPIResponse("Done")
+    }
+    case Timestep => {
+      //log.debug("Time step")
+      fleet map (car => car ! Timestep )
+      sender ! GenericAPIResponse("Done")
+    }
     case m => log.debug(s"Unknown message received : ${m.toString}")
   }
 

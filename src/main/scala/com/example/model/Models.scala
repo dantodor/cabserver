@@ -1,23 +1,15 @@
-/*
- * Copyright 2016 Vitor Vieira
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.model
 
 object Models {
   case class Point(x:Long, y:Long)
   case class CarRequest(from:Point, to:Point)
-
+  case class WebCarRequest(source:Point,destination:Point) {
+    require(source.x<=Int.MaxValue)
+    require(source.x>=Int.MinValue)
+    require(source.y<=Int.MaxValue)
+    require(source.y>=Int.MinValue)
+    def toCarRequest = CarRequest(source,destination)
+  }
+  case class BookResponse(car_id:Int, total_time:Long)
+  case class GenericAPIResponse(status:String)
 }
