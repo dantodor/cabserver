@@ -4,7 +4,8 @@ import akka.actor.{ActorSystem, Props}
 import akka.event.{LogSource, Logging}
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import com.example.actors.{FleetManager, FleetManager2}
+import com.example.actors.FleetManager
+import com.example.model.Models.Point
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.duration._
@@ -14,12 +15,14 @@ import scala.language.postfixOps
 trait ServerSettings {
 
   //read configuration and initialize values
-  lazy private val config: Config = ConfigFactory.load()
+  private val config: Config = ConfigFactory.load()
   val httpConfig = config.getConfig("http")
   val httpInterface: String = httpConfig.getString("interface")
   val httpPort: Int = httpConfig.getInt("port")
   val fleetConfig = config.getConfig("fleet")
   val cabs = fleetConfig.getInt("cabs")
+  val initialX = fleetConfig.getInt("posx")
+  val initialY = fleetConfig.getInt("posy")
 
 
   //initialize and set up the actor system
@@ -34,7 +37,7 @@ trait ServerSettings {
   implicit val log = logger
 
   //start the fleet manager actor
-  val fleetManager = actorSystem.actorOf(Props(new FleetManager2(cabs)),"FleetManager")
+  val fleetManager = actorSystem.actorOf(Props(new FleetManager(cabs,Point(initialX,initialY))),"FleetManager")
 }
 
 object ServerSettings extends ServerSettings

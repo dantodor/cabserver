@@ -52,4 +52,4 @@ packageName in Docker := "cabserver"
 dockerExposedPorts := Seq(8080)
 
 parallelExecution in Test := false
-fork in Test := true
+fork in Test := false

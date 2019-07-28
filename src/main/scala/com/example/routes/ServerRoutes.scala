@@ -38,9 +38,9 @@ object ServerRoutes extends BaseRoute {
     }
 
 
-  protected lazy val api: Route =
+  protected val api: Route =
     api(dsl = logRequestResult("log-service") {
-      this.templateDirectives
+      templateDirectives
     })
 
   def availableRoutes: Route = api
