@@ -71,14 +71,67 @@ Your solution should
 - Contains unit tests and clear instructions on how to build/execute them
 - Have clear design/API documentation
 
+## Assumptions
 
+Since the empty request was not fully defined, I took the liberty to assume that an empty response is defined by car_id 0 and total_time 0.
+
+## General implementation considerations
+Since Scala is one of my favourite languages, I choosed to solve the task using Scala and Akka actor library.
+The system is comprised of an HTTP server built on Akka HTTP, that wraps the logic.
+The core is implemented by two actors, FleetManager and Cab.
+FleetManager handles the logic of fulfilling web requests, and its Receive function is implemented as a tail recursive function that wraps immutable state.
+Cab wraps the logic for handling a single car, and its inner workings are implemented using a state machine with two states, working and waiting.
+The messaging protocol is defined in package Model, file Protocol, and the required request and response wrappers are in Models.
+Server is configured via the ServerSettings class, which loads its data from application.conf file in the resources folder.
+The API is defined in ServerRoutes, and the HTTP subsystem is brought up to life in CabServer file.
+For further implementation details please see the source code and comments. 
 
 ## Usage
 
-Start services with sbt:
+### Prerequisites
+- a computer with Windows, Linux or OSX 
+- Java JDK, minimal version 1.8 installed
+- Scala Simple Build Tool ( sbt ) installed - <https://www.scala-sbt.org/release/docs/Setup.html>
+- unzipped source code residing in a local folder
+- open command prompt and change directory to that folder
+
+### Compile 
 
 ```
-$ sbt
-> run
+$ sbt clean compile
 ```
+
+### Run tests 
+
+```
+$ sbt clean coverage test
+```
+
+### Generate code coverage report 
+
+```
+$ sbt coverageReport
+```
+
+### Run
+
+#### 1. Via sbt 
+
+```
+$ sbt run
+```
+### 2. Via docker
+NB, you must have docker installed on your system and appropriate permissions set to the docker daemon, i.e. current user must be able to run docker commands 
+
+```
+$ sbt docker:publishLocal
+```
+This will pull a JDK8 image locally and build a docker image for the app
+```
+docker run -d -p 8080:8080 --name cabserver cabserver:0.0.1
+```
+This will run the docker container generated in the previous step.
+
+The API provided by both these methods can be called now according to the given specs.
+Also, the parameters of the system can be easily modified by editing application.conf ( http params, number of cabs, initial position, etc. )
 
