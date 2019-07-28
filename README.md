@@ -90,7 +90,7 @@ For further implementation details please see the source code and comments.
 
 ### Prerequisites
 - a computer with Windows, Linux or OSX 
-- Java JDK, minimal version 1.8 installed
+- Java JDK, version 1.8+ installed
 - Scala Simple Build Tool ( sbt ) installed - <https://www.scala-sbt.org/release/docs/Setup.html>
 - unzipped source code residing in a local folder
 - open command prompt and change directory to that folder
@@ -120,6 +120,9 @@ $ sbt coverageReport
 ```
 $ sbt run
 ```
+
+When the message
+```Cab Server running at http://0.0.0.0:8080/``` appears in the console, the server is ready to serve requests
 ### 2. Via docker
 NB, you must have docker installed on your system and appropriate permissions set to the docker daemon, i.e. current user must be able to run docker commands 
 
