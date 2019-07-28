@@ -49,21 +49,10 @@ class FleetManagerSpec extends TestKit(ActorSystem("MySpec"))
     }
 
     "After completing a drive, closest car should be choosen" in {
-      manager ! Reset
-      expectMsg(GenericAPIResponse("Reset done"))
-      manager ! CarRequest(Point(2,2),Point(3,3))
-      expectMsg(BookResponse(1,6))
-      (0 to 6) foreach {i => {
-        manager ! Timestep
-        expectMsg(GenericAPIResponse("Timestep done"))
-      }
-      }
-      manager ! CarRequest(Point(4,4),Point(10,10))
-      expectMsg(BookResponse(1,14))
 
       manager ! Reset
       expectMsg(GenericAPIResponse("Reset done"))
-      manager ! CarRequest(Point(2,2),Point(100,30))
+      manager ! CarRequest(Point(2,2),Point(30,100))
       expectMsg(BookResponse(1,130))
       (0 to 130) foreach {i => {
           manager ! Timestep

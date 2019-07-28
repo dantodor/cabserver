@@ -126,7 +126,7 @@ NB, you must have docker installed on your system and appropriate permissions se
 ```
 $ sbt docker:publishLocal
 ```
-This will pull a JDK8 image locally and build a docker image for the app
+This will pull a JDK8 image locally and build a docker image for the app. Please be patient, this step might take a while.
 ```
 docker run -d -p 8080:8080 --name cabserver cabserver:0.0.1
 ```
@@ -135,3 +135,4 @@ This will run the docker container generated in the previous step.
 The API provided by both these methods can be called now according to the given specs.
 Also, the parameters of the system can be easily modified by editing application.conf ( http params, number of cabs, initial position, etc. )
 
+For any further information, please feel free to contact me.
